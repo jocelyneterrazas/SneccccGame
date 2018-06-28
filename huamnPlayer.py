@@ -77,89 +77,7 @@ class Player:
  
  
  
-class Computer:
 
-    ## ADD CODE WHERE COMMENTS EXPLICITLY ASK :-)
-    
-    x = [0]
-    y = [0]
-    step = 44
-    direction = 0
-    length = 3
- 
-    updateCountMax = 2
-    updateCount = 0
-
-     # initializer
-    def __init__(self, length):
-       self.length = length
-       for i in range(0,2000):
-           self.x.append(-100)
-           self.y.append(-100)
- 
-       # initial positions, no collision.
-       self.x[0] = 1*44
-       self.y[0] = 4*44
- 
-    def update(self):
- 
-        self.updateCount = self.updateCount + 1
-        if self.updateCount > self.updateCountMax:
- 
-            # update previous positions
-            for i in range(self.length-1,0,-1):
-                self.x[i] = self.x[i-1]
-                self.y[i] = self.y[i-1]
- 
-            # update position of head of snake
-            ## ADD 4 IF STATEMENTS TO UPDATE POSITION
-            if self.direction == 0:
-                self.x[0] = self.x[0] + self.step
-            if self.direction == 1:
-                self.x[0] = self.x[0] - self.step
-            if self.direction == 2:
-                self.y[0] = self.y[0] - self.step
-            if self.direction == 3:
-                self.y[0] = self.y[0] + self.step
-                
-            ##RESET COUNTER HERE
-            self.updateCount = 0
- 
-    def moveRight(self):
-        self.direction = 0
-     
-    ## DEFINE MOVE LEFT FUNCTION
-    def moveLeft(self):
-        self.direction = 1
-    ## DEFINE MOVE UP FUNCTION
-    def moveUp(self):
-        self.direction = 2
-    ## DEFINE MOVE DOWN FUNCTION 
-    def moveDown(self):
-        self.direction = 3
-
-    ##FINISH THE TARGET FUNCTION
-    ## DX is the X of the APPLE
-    ## DY is the Y of the APPLY
-    def target(self,dx,dy):
-        ## This function moves left if snake is on the right side of the apple
-        if self.x[0] > dx:
-            self.moveLeft()
-            
-        ## WHEN SHOULD YOU MOVE RIGHT?
-        if self.x[1] > dx:
-            self.moveRight()
-        ##WHEN SHOULD YOU MOVE DOWN?
-        if self.x[2] > dx:
-            self.moveDown()
-        ## WHEN SHOULD YOU MOVE UP?
-        if self.x[3] > dx:
-            self.moveUp()
-    def draw(self, surface, image):
-        for i in range(0,self.length):
-            surface.blit(image,(self.x[i],self.y[i])) 
- 
- 
 class Game:
     def isCollision(self,x1,y1,x2,y2,bsize):
         if x1 >= x2 and x1 <= x2 + bsize:
@@ -182,26 +100,23 @@ class App:
         self.game = Game()
         self.player = Player(5) 
         self.apple = Apple(8,5)
-        ##INITIALIZE COMPUTER HERE 
+ 
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode((self.windowWidth,self.windowHeight), pygame.HWSURFACE)
  
         pygame.display.set_caption('Pygame pythonspot.com example')
         self._running = True
-        self._image_surf = pygame.image.load("doggo.png").convert()
-        self._apple_surf = pygame.image.load("snake.png").convert()
+        self._image_surf = pygame.image.load("myFirst.png").convert()
+        self._apple_surf = pygame.image.load("mySecond.png").convert()
  
     def on_event(self, event):
         if event.type == QUIT:
             self._running = False
  
     def on_loop(self):
-        self.computer.target(self.apple.x, self.apple.y)
         self.player.update()
-        ## UPDATE COMPUTER HERE
-
-        
+ 
         # does snake eat apple?
         for i in range(0,self.player.length):
             if self.game.isCollision(self.apple.x,self.apple.y,self.player.x[i], self.player.y[i],44):
@@ -209,10 +124,6 @@ class App:
                 self.apple.y = randint(2,9) * 44
                 self.player.length = self.player.length + 1
  
-        # does computer eat apple?
-        ##CHECK IF COMPUTER EATS APPLE HERE (USE ABOVE FOR LOOP FOR IDEAS)
-##        for i in range(1,self.player.length):
-##            if self.game.isCollision(self.apple.x,self.apple.y,self.player.x[i], self.player.y[i],44):
         
         # does snake collide with itself?
         for i in range(2,self.player.length):
@@ -228,7 +139,6 @@ class App:
         self._display_surf.fill((0,0,0))
         self.player.draw(self._display_surf, self._image_surf)
         self.apple.draw(self._display_surf, self._apple_surf)
-        ### DRAW COMPUTER HERE
         pygame.display.flip()
  
     def on_cleanup(self):
